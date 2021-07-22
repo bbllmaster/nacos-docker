@@ -1,5 +1,4 @@
-FROM centos:7.5.1804
-MAINTAINER pader "huangmnlove@163.com"
+FROM adoptopenjdk:11-jdk-openj9-bionic
 
 # set environment
 ENV MODE="cluster" \
@@ -8,9 +7,9 @@ ENV MODE="cluster" \
     CLASSPATH=".:/home/nacos/conf:$CLASSPATH" \
     CLUSTER_CONF="/home/nacos/conf/cluster.conf" \
     FUNCTION_MODE="all" \
-    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" \
+    JAVA_HOME="/opt/java/openjdk" \
     NACOS_USER="nacos" \
-    JAVA="/usr/lib/jvm/java-1.8.0-openjdk/bin/java" \
+    JAVA="/opt/java/openjdk/bin/java" \
     JVM_XMS="1g" \
     JVM_XMX="1g" \
     JVM_XMN="512m" \
@@ -25,15 +24,11 @@ ARG HOT_FIX_FLAG=""
 
 WORKDIR $BASE_DIR
 
-RUN set -x \
-    && yum update -y \
-    && yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel wget iputils nc  vim libcurl
-RUN wget  https://github.com/alibaba/nacos/releases/download/${NACOS_VERSION}${HOT_FIX_FLAG}/nacos-server-${NACOS_VERSION}.tar.gz -P /home
+
+RUN apt update && apt install wget && wget  https://github.com/alibaba/nacos/releases/download/${NACOS_VERSION}${HOT_FIX_FLAG}/nacos-server-${NACOS_VERSION}.tar.gz -P /home
 RUN tar -xzvf /home/nacos-server-${NACOS_VERSION}.tar.gz -C /home \
     && rm -rf /home/nacos-server-${NACOS_VERSION}.tar.gz /home/nacos/bin/* /home/nacos/conf/*.properties /home/nacos/conf/*.example /home/nacos/conf/nacos-mysql.sql
-RUN yum autoremove -y wget \
-    && ln -snf /usr/share/zoneinfo/$TIME_ZONE /etc/localtime && echo $TIME_ZONE > /etc/timezone \
-    && yum clean all
+RUN ln -snf /usr/share/zoneinfo/$TIME_ZONE /etc/localtime && echo $TIME_ZONE > /etc/timezone 
 
 
 
