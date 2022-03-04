@@ -19,7 +19,7 @@ ENV MODE="cluster" \
     TOMCAT_ACCESSLOG_ENABLED="false" \
     TIME_ZONE="Asia/Shanghai"
 
-ARG NACOS_VERSION=2.0.2
+ARG NACOS_VERSION=2.0.4
 ARG HOT_FIX_FLAG=""
 
 WORKDIR $BASE_DIR
@@ -35,7 +35,6 @@ RUN ln -snf /usr/share/zoneinfo/$TIME_ZONE /etc/localtime && echo $TIME_ZONE > /
 
 ADD bin/docker-startup.sh bin/docker-startup.sh
 ADD conf/application.properties conf/application.properties
-ADD init.d/custom.properties init.d/custom.properties
 
 
 # set startup log dir
